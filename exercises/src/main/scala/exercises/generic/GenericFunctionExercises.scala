@@ -18,19 +18,29 @@ object GenericFunctionExercises {
     // 1a. Implement `swap` which exchanges `first` and `second`
     // such as Pair("John", "Doe").swap == Pair("Doe", "John")
     def swap: Pair[A] =
-      ???
+      Pair(second, first)
 
     // 1b. Implement `map` which applies a function to `first` and `second`
     // such as Pair("John", "Doe").map(_.length) == Pair(4,3)
     def map[To](update: A => To): Pair[To] =
-      ???
+      Pair(update(first), update(second))
 
     // 1c. Implement `zipWith` which merges two Pairs using a `combine` function
     // such as Pair(0, 2).zipWith(Pair(3, 4))((x, y) => x + y) == Pair(3, 6)
     //         Pair(2, 3).zipWith(Pair("Hello ", "World "))(replicate) == Pair("Hello Hello ", "World World World ")
     // Bonus: Why did we separate the arguments of `zipWith` into two set of parentheses?
     def zipWith[Other, To](other: Pair[Other])(combine: (A, Other) => To): Pair[To] =
-      ???
+      Pair(combine(first, other.first), combine(second, other.second))  
+
+    //////////////////////////////////////////////
+    // Bonus question (not covered by the video)
+    //////////////////////////////////////////////
+
+    // 1f. Can you implement a method on `Pair` similar to `zipWith`, but that combines 3
+    // Pairs instead of 2? If yes, can you implement this method using `zipWith`?
+    // Note: Libraries often call this method `map3` and `zipWith` is often called `map2`
+    def zipTrip[Other1, Other2, To1, To2](other1: Pair[Other1], other2: Pair[Other2])(combine1: (A, Other1) => To1)(combine2: (To1, Other2) => To2): Pair[To2] =
+      this.zipWith(other1)(combine1).zipWith(other2)(combine2)
   }
 
   // 1d. Use the Pair API to decode the content of `secret`.
@@ -42,7 +52,7 @@ object GenericFunctionExercises {
       first = List(103, 110, 105, 109, 109, 97, 114, 103, 111, 114, 80),
       second = List(108, 97, 110, 111, 105, 116, 99, 110, 117, 70)
     )
-  lazy val decoded: Pair[String] = ???
+  lazy val decoded: Pair[String] = secret.map(bytes => new String(bytes.toArray)).map(_.reverse).swap
 
   // 1e. Use the Pair API to combine `productNames` and `productPrices` into `products`
   // such as products == Pair(Product("Coffee", 2.5), Product("Plane ticket", 329.99))
@@ -50,17 +60,10 @@ object GenericFunctionExercises {
 
   val productNames: Pair[String]  = Pair("Coffee", "Plane ticket")
   val productPrices: Pair[Double] = Pair(2.5, 329.99)
+  val productDescriptions: Pair[String] = Pair("Hot", "High")
 
   lazy val products: Pair[Product] =
-    ???
-
-  //////////////////////////////////////////////
-  // Bonus question (not covered by the video)
-  //////////////////////////////////////////////
-
-  // 1f. Can you implement a method on `Pair` similar to `zipWith`, but that combines 3
-  // Pairs instead of 2? If yes, can you implement this method using `zipWith`?
-  // Note: Libraries often call this method `map3` and `zipWith` is often called `map2`
+    productNames.zipWith(productPrices)(Product)
 
   ////////////////////////////
   // Exercise 2: Predicate

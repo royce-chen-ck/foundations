@@ -16,15 +16,36 @@ class GenericFunctionExercisesTest extends AnyFunSuite with ScalaCheckDrivenProp
   // Exercise 1: Pair
   ////////////////////
 
-  test("Pair swap") {}
+  test("Pair swap") {
+    assert(names.swap == Pair("Elisabeth", "John"))
+    assert(ages.swap == Pair(46, 32))
+  }
 
-  test("Pair map") {}
+  test("Pair map") {
+    assert(names.map(_.length) == Pair(4, 9))
+    assert(ages.map(_ + 3) == Pair(35, 49))
+  }
 
-  test("Pair decoded") {}
+  test("Pair decoded") {
+    // println(decoded)
+    // assert(0 == 1)
+  }
 
-  test("Pair zipWith") {}
+  test("Pair zipWith") {
+    assert(Pair(0, 2).zipWith(Pair(3, 4))((x, y) => x + y) == Pair(3, 6))
+  }
 
-  test("Pair productNames") {}
+  test("Pair zipTrip") {
+    case class ProductWithDescription(product: String, price: Double, description: String)
+    val productsTrip = productNames.zipTrip(productPrices, productDescriptions)(Product)((p: Product, s: String) => 
+      ProductWithDescription(p.name, p.price, s)
+    )
+    assert(productsTrip == Pair(ProductWithDescription("Coffee", 2.5, "Hot"), ProductWithDescription("Plane ticket", 329.99, "High")))
+  }
+
+  test("Pair productNames") {
+    assert(products == Pair(Product("Coffee", 2.5), Product("Plane ticket", 329.99)))
+  }
 
   ////////////////////////////
   // Exercise 2: Predicate

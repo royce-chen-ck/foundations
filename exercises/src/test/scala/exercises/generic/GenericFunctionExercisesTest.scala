@@ -51,9 +51,19 @@ class GenericFunctionExercisesTest extends AnyFunSuite with ScalaCheckDrivenProp
   // Exercise 2: Predicate
   ////////////////////////////
 
-  test("Predicate &&") {}
+  test("Predicate &&") {
+    assert((isPositive && isEven)(2) == true)
+    assert((isPositive && isEven)(11) == false)
+    assert((isPositive && isEven)(-2) == false)
+    assert((isPositive && isEven)(-11) == false)
+  }
 
-  test("Predicate ||") {}
+  test("Predicate ||") {
+    assert((isPositive || isEven)(2) == true)
+    assert((isPositive || isEven)(11) == true)
+    assert((isPositive || isEven)(-2) == true)
+    assert((isPositive || isEven)(-11) == false)
+  }
 
   test("Predicate flip") {}
 

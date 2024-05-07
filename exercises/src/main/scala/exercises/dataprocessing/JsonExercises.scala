@@ -35,7 +35,15 @@ object JsonExercises {
   //  }                                           }
   //}                                           }
   def anonymize(json: Json): Json =
-    ???
+    json match {
+      case JsonNumber(number) => JsonNumber(0)
+      case JsonString(text) => JsonString("xxx")
+      case JsonObject(obj) => 
+        val newObj = obj.map {
+          case(key, value) => (key, anonymize(value))
+        }
+        JsonObject(newObj)
+    }
 
   // b. Implement `search`, a method that checks if a JSON document contains a text.
   // Note: `search` doesn't look inside of the keys of a `JsonObject`, only the values.
@@ -45,8 +53,14 @@ object JsonExercises {
   // * search("Hello", "ll") == true
   // * search({ "message" : "hello" }, "ll") == true
   // * search({ "message" : "hi" }, "ll") == false
-  def search(json: Json, text: String): Boolean =
-    ???
+  def search(json: Json, needle: String): Boolean =
+    json match {
+      case JsonString(text) => text == needle
+      case JsonObject(obj) => 
+        val newObj = obj.map {
+          case(key, value) => (key, search(value, needle))
+        }
+    }
 
   // c. Implement `depth`, a method that calculates the maximum level of nesting of a JSON document.
   // For example:
@@ -54,7 +68,14 @@ object JsonExercises {
   // * { "name" : "john" } has depth 1
   // * { "name" : "john", "address" : { "postcode" : "E16 4SR" } } has depth 2
   def depth(json: Json): Int =
-    ???
+    json match {
+      case JsonString(_) | JsonNumber(_) => 0
+      case JsonObject(obj) => 
+        obj.values.map(depth(_)).maxOption match {
+          case None => 0
+          case Some(maxDepth) => maxDepth + 1
+        }
+    }
 
   //////////////////////////////////////////////
   // Bonus question (not covered by the video)

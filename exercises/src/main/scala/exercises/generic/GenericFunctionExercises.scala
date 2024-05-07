@@ -89,7 +89,7 @@ object GenericFunctionExercises {
     //         (isEven && isPositive)(-4) == false
     //         (isEven && isPositive)(-7) == false
     def &&(other: Predicate[A]): Predicate[A] =
-      ???
+      Predicate(value => eval(value) && other.eval(value))
 
     // 2b. Implement `||` that combines two predicates using logical or
     // such as (isEven || isPositive)(12) == true
@@ -97,12 +97,12 @@ object GenericFunctionExercises {
     //         (isEven || isPositive)(-4) == true
     // but     (isEven || isPositive)(-7) == false
     def ||(other: Predicate[A]): Predicate[A] =
-      ???
+      Predicate(value => eval(value) || other.eval(value))
 
     // 2c. Implement `flip` that reverses a predicate
     // such as isEven.flip(11) == true
     def flip: Predicate[A] =
-      ???
+      Predicate(value => !eval(value))
   }
 
   // 2d. Implement `isValidUser`, a predicate which checks if a `User` is:
@@ -118,7 +118,7 @@ object GenericFunctionExercises {
   case class User(name: String, age: Int)
 
   lazy val isValidUser: Predicate[User] =
-    ???
+    Predicate((u: User) => u.name.length >= 3) && Predicate((u: User) => u.name.charAt(0).isUpper) && Predicate((u: User) => u.age > 18)
 
   ////////////////////////////
   // Exercise 3: JsonDecoder
@@ -152,7 +152,10 @@ object GenericFunctionExercises {
   // but     userIdDecoder.decode("hello") would throw an Exception
   case class UserId(value: Int)
   lazy val userIdDecoder: JsonDecoder[UserId] =
-    ???
+    new JsonDecoder[UserId] {
+      def decode(json: UserID) = userId(intDecoder.decode(toInt))
+    }
+
 
   // 3b. Implement `localDateDecoder`, a `JsonDecoder` for `LocalDate`
   // such as localDateDecoder.decode("\"2020-03-26\"") == LocalDate.of(2020,3,26)

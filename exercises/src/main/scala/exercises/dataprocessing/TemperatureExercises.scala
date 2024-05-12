@@ -7,7 +7,15 @@ object TemperatureExercises {
   // Step 2: Find the minimum value among the local minimums.
   // Note: We'll write test in the file `ParListTest.scala`
   def minSampleByTemperature(samples: ParList[Sample]): Option[Sample] =
-    ???
+    minSampleByTemperatureList(samples.partitions.flatMap(minSampleByTemperatureList))
+
+  def minSampleByTemperatureList(partition: List[Sample]): Option[Sample] = 
+    partition.foldLeft(Option.empty[Sample]) {
+      case (None, sample) => Some(sample)
+      case (Some(minSample), sample) => 
+        if (sample.temperatureFahrenheit < minSample.temperatureFahrenheit) Some(sample) 
+        else Some(minSample)
+    }
 
   // c. Implement `averageTemperature` which finds the average temperature across all `Samples`.
   // `averageTemperature` should work as follow:
